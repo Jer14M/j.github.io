@@ -1,0 +1,103 @@
+body {
+    background: linear-gradient(to bottom right, #0F2027, #203A43, #2C5364);
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#game-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.player-container {
+    margin-bottom: 20px;
+}
+
+.timer-container {
+    margin-bottom: 10px;
+}
+
+.input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+.hidden {
+    display: none;
+}
+
+#word-display {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;
+    color: #ffff66; /* Giallo */
+}
+
+#player1-container {
+    border-bottom: 2px solid #33ccff; /* Azzurro */
+}
+
+#player2-container {
+    border-bottom: 2px solid #ff6666; /* Rosso */
+}
+
+#definition {
+    color: #99ff99; /* Verde chiaro */
+}
+
+#player1-title {
+    color: #33ccff; /* Azzurro */
+}
+
+#player2-title {
+    color: #ff6666; /* Rosso */
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+.input {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+#start-recognition-button {
+    font-size: 16px;
+}
+
