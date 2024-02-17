@@ -1039,19 +1039,6 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             pauseButton.textContent = 'Pausa';
             startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
-             if (annyang) {
-        var commands = {
-            '*word': function(word) {
-                playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
-                checkAnswer();
-            }
-        };
-        annyang.addCommands(commands);
-        annyang.setLanguage('it-IT'); // Imposta la lingua italiana
-        annyang.start();
-    } else {
-        alert('Il riconoscimento vocale non è supportato dal tuo browser.');
-    }
     }
 
     // Funzione per controllare la risposta dell'utente
@@ -1085,6 +1072,19 @@ document.addEventListener("DOMContentLoaded", function() {
         clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
         wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
         startTimer(); // Avvia il timer
+         if (annyang) {
+        var commands = {
+            '*word': function(word) {
+                playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
+                checkAnswer();
+            }
+        };
+        annyang.addCommands(commands);
+        annyang.setLanguage('it-IT'); // Imposta la lingua italiana
+        annyang.start();
+    } else {
+        alert('Il riconoscimento vocale non è supportato dal tuo browser.');
+    }
     }
 
     // Funzione per resettare il gioco
