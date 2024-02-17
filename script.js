@@ -1039,23 +1039,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             pauseButton.textContent = 'Pausa';
             startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
-        }
-    }
-
-    // Funzione per avviare il gioco
-    function startGame() {
-        const randomIndex = Math.floor(Math.random() * wordsAndDefinitions.length);
-        const selectedWord = wordsAndDefinitions[randomIndex];
-
-        definitionDisplay.textContent = selectedWord.definition;
-        definitionDisplay.classList.remove('hidden');
-        currentWord = selectedWord.word;
-        revealedLetters = 1;
-        displayWord();
-        clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
-        wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
-        startTimer(); // Avvia il timer
-         if (annyang) {
+             if (annyang) {
         var commands = {
             '*word': function(word) {
                 playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
@@ -1085,6 +1069,22 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             alert('Risposta sbagliata! Prova di nuovo.');
         }
+        }
+    }
+
+    // Funzione per avviare il gioco
+    function startGame() {
+        const randomIndex = Math.floor(Math.random() * wordsAndDefinitions.length);
+        const selectedWord = wordsAndDefinitions[randomIndex];
+
+        definitionDisplay.textContent = selectedWord.definition;
+        definitionDisplay.classList.remove('hidden');
+        currentWord = selectedWord.word;
+        revealedLetters = 1;
+        displayWord();
+        clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
+        wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
+        startTimer(); // Avvia il timer
     }
 
     // Funzione per resettare il gioco
