@@ -1036,6 +1036,7 @@ document.addEventListener("DOMContentLoaded", function() {
             pauseButton.textContent = 'Riprendi';
             clearInterval(timerInterval);
             clearInterval(wordInterval);
+            annyang.abort();
         } else {
             pauseButton.textContent = 'Pausa';
             startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
