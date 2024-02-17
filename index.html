@@ -12,9 +12,11 @@
         <h1>Scalata doppia</h1>
         <div id="player1-settings" class="player-settings">
             <input type="text" id="player1-name" class="input" placeholder="Nome Giocatore 1">
+          <input type="number" id="player1-timer-duration" class="input" placeholder="Sec timer" min="45" max="1800">
         </div>
         <div id="player2-settings" class="player-settings">
             <input type="text" id="player2-name" class="input" placeholder="Nome Giocatore 2">
+          <input type="number" id="player2-timer-duration" class="input" placeholder="Sec timer" min="45" max="1800">
         </div>
 
         <div class="button-container">
@@ -25,14 +27,14 @@
         <div id="player1-container" class="player-container">
             <h2 id="player1-title">Giocatore 1</h2>
             <div class="timer-container">
-                <p>Tempo rimasto: <span id="player1-timer">01:00:00</span></p>
+                <p>Tempo rimasto: <span id="player1-timer">00:00:00</span></p>
             </div>
             <p>Punteggio: <span id="player1-score">0</span></p>
         </div>
         <div id="player2-container" class="player-container">
             <h2 id="player2-title">Giocatore 2</h2>
             <div class="timer-container">
-                <p>Tempo rimasto: <span id="player2-timer">01:00:00</span></p>
+                <p>Tempo rimasto: <span id="player2-timer">00:00:00</span></p>
             </div>
             <p>Punteggio: <span id="player2-score">0</span></p>
         </div>
