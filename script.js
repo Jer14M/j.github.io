@@ -1088,27 +1088,32 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Funzione per resettare il gioco
-    function resetGame() {
-        player1Timer = parseInt(player1TimerDurationInput.value) * 100;
-        player2Timer = parseInt(player2TimerDurationInput.value) * 100;
-        player1TimerDisplay.textContent = formatTime(player1Timer);
-        player2TimerDisplay.textContent = formatTime(player2Timer);
-        player1Score = 0;
-        player2Score = 0;
-        player1ScoreDisplay.textContent = player1Score;
-        player2ScoreDisplay.textContent = player2Score;
-        clearInterval(timerInterval);
-        clearInterval(wordInterval);
-        pauseButton.textContent = 'Pausa';
-        startButton.classList.remove('hidden');
-        restartButton.classList.add('hidden');
-        pauseButton.classList.add('hidden');
-        playerInput.value = '';
-        definitionDisplay.textContent = '';
-        definitionDisplay.classList.add('hidden');
-        player1Title.textContent = player1NameInput.value || 'Giocatore 1';
-        player2Title.textContent = player2NameInput.value || 'Giocatore 2';
-    }
+function resetGame() {
+    // Aggiornamento della durata dei timer con i nuovi valori inseriti dai giocatori
+    player1Timer = parseInt(player1TimerDurationInput.value) * 100;
+    player2Timer = parseInt(player2TimerDurationInput.value) * 100;
+    // Visualizzazione della nuova durata dei timer
+    player1TimerDisplay.textContent = formatTime(player1Timer);
+    player2TimerDisplay.textContent = formatTime(player2Timer);
+    // Altri passaggi di reset del gioco
+    player1Score = 0;
+    player2Score = 0;
+    player1ScoreDisplay.textContent = player1Score;
+    player2ScoreDisplay.textContent = player2Score;
+    clearInterval(timerInterval);
+    clearInterval(wordInterval);
+    pauseButton.textContent = 'Pausa';
+    startButton.classList.remove('hidden');
+    restartButton.classList.add('hidden');
+    pauseButton.classList.add('hidden');
+    playerInput.value = '';
+    definitionDisplay.textContent = '';
+    definitionDisplay.classList.add('hidden');
+    // Aggiornamento dei nomi dei giocatori
+    player1Title.textContent = player1NameInput.value || 'Giocatore 1';
+    player2Title.textContent = player2NameInput.value || 'Giocatore 2';
+}
+
 
     // Aggiungi gestore di eventi per l'evento "keydown" sull'input dell'utente
     playerInput.addEventListener('keydown', function(event) {
