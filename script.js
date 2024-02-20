@@ -1071,6 +1071,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     }
 
+    // Funzione per rivelare tutte le lettere mancanti nella parola
+function revealMissingLetters() {
+    const wordArray = wordDisplay.textContent.split('');
+    for (let i = 0; i < currentWord.length; i++) {
+        if (currentWord.charAt(i) !== '-') {
+            wordArray[i] = currentWord.charAt(i);
+        }
+    }
+    wordDisplay.textContent = wordArray.join('');
+    revealedLetters = currentWord.length;
+}
+
     // Funzione per controllare la risposta dell'utente
     function checkAnswer() {
         const playerGuess = playerInput.value.trim().toUpperCase();
@@ -1082,17 +1094,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 player2Score++;
                 player2ScoreDisplay.textContent = player2Score;
             }
-            showGuessedWord(playerGuess);
+            revealMissingLetters();
             switchTurn();
         } else {
             alert('Risposta sbagliata! Prova di nuovo.');
         }
     }
-
-// Funzione per mostrare la parola indovinata
-function showGuessedWord(word) {
-    wordDisplay.textContent = word; // Visualizza la parola indovinata
-}
     
     // Funzione per resettare il gioco
     function resetGame() {
