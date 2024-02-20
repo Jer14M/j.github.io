@@ -1082,8 +1082,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 player2Score++;
                 player2ScoreDisplay.textContent = player2Score;
             }
-            switchTurn();
             showGuessedWord(playerGuess);
+            switchTurn();
         } else {
             alert('Risposta sbagliata! Prova di nuovo.');
         }
