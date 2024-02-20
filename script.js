@@ -1083,11 +1083,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 player2ScoreDisplay.textContent = player2Score;
             }
             switchTurn();
+            showGuessedWord(playerGuess);
         } else {
             alert('Risposta sbagliata! Prova di nuovo.');
         }
     }
 
+// Funzione per mostrare la parola indovinata
+function showGuessedWord(word) {
+    wordDisplay.textContent = word; // Visualizza la parola indovinata
+}
+    
     // Funzione per resettare il gioco
     function resetGame() {
         player1Timer = parseInt(player1TimerDurationInput.value) * 100;
