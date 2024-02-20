@@ -944,10 +944,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const player2Title = document.getElementById('player2-title');
     const player1TimerDurationInput = document.getElementById('player1-timer-duration');
     const player2TimerDurationInput = document.getElementById('player2-timer-duration');
-    const startRecognitionButton = document.getElementById('start-recognition-button');
+    const toggleRecognitionButton = document.getElementById('toggle-recognition-button');
+
+
 
     let wordInterval;
     let timerInterval;
+    let recognitionActive = true; // Indica se il riconoscimento vocale è attivo o meno
+
 
     // Funzione per formattare il tempo
     function formatTime(milliseconds) {
@@ -1108,23 +1112,32 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-   startRecognitionButton.addEventListener('click', () => {
-    if (annyang) {
-        var commands = {
-            '*word': function(word) {
-                playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
-                checkAnswer();
-            }
-        };
-        annyang.addCommands(commands);
-        annyang.setLanguage('it-IT'); // Imposta la lingua italiana
-        annyang.start(); // Riavvia il riconoscimento vocale
-        startRecognitionButton.classList.add('hidden'); // Nasconde il pulsante di avvio
-        stopRecognitionButton.classList.remove('hidden'); // Mostra il pulsante di arresto
+
+toggleRecognitionButton.addEventListener('click', () => {
+    if (recognitionActive) {
+        annyang.abort(); // Disattiva il riconoscimento vocale
+        toggleRecognitionButton.textContent = 'Riattiva il Riconoscimento Vocale'; // Cambia il testo del pulsante
+        recognitionActive = false; // Imposta lo stato del riconoscimento vocale come disattivo
     } else {
-        alert('Il riconoscimento vocale non è supportato dal tuo browser.');
+        if (annyang) {
+            var commands = {
+                '*word': function(word) {
+                    playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
+                    checkAnswer();
+                }
+            };
+            annyang.addCommands(commands);
+            annyang.setLanguage('it-IT'); // Imposta la lingua italiana
+            annyang.start(); // Riavvia il riconoscimento vocale
+            toggleRecognitionButton.textContent = 'Disattiva Riconoscimento Vocale'; // Cambia il testo del pulsante
+            recognitionActive = true; // Imposta lo stato del riconoscimento vocale come attivo
+        } else {
+            alert('Il riconoscimento vocale non è supportato dal tuo browser.');
+        }
     }
 });
+
+
 
     
     // Aggiungi gestori di eventi per i pulsanti
