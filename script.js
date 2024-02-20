@@ -944,6 +944,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const player2Title = document.getElementById('player2-title');
     const player1TimerDurationInput = document.getElementById('player1-timer-duration');
     const player2TimerDurationInput = document.getElementById('player2-timer-duration');
+    const startRecognitionButton = document.getElementById('start-recognition-button');
 
     let wordInterval;
     let timerInterval;
@@ -1056,19 +1057,6 @@ document.addEventListener("DOMContentLoaded", function() {
         clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
         wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
         startTimer(); // Avvia il timer
-        if (annyang) {
-        var commands = {
-            '*word': function(word) {
-                playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
-                checkAnswer();
-            }
-        };
-        annyang.addCommands(commands);
-        annyang.setLanguage('it-IT'); // Imposta la lingua italiana
-        annyang.start();
-    } else {
-        alert('Il riconoscimento vocale non è supportato dal tuo browser.');
-    }
     }
 
 
@@ -1120,6 +1108,25 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+   startRecognitionButton.addEventListener('click', () => {
+    if (annyang) {
+        var commands = {
+            '*word': function(word) {
+                playerInput.value = word.toLowerCase().replace(/\.$/, '').replace(/\?$/, '');
+                checkAnswer();
+            }
+        };
+        annyang.addCommands(commands);
+        annyang.setLanguage('it-IT'); // Imposta la lingua italiana
+        annyang.start(); // Riavvia il riconoscimento vocale
+        startRecognitionButton.classList.add('hidden'); // Nasconde il pulsante di avvio
+        stopRecognitionButton.classList.remove('hidden'); // Mostra il pulsante di arresto
+    } else {
+        alert('Il riconoscimento vocale non è supportato dal tuo browser.');
+    }
+});
+
+    
     // Aggiungi gestori di eventi per i pulsanti
     guessButton.addEventListener('click', checkAnswer);
 
