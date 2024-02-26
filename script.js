@@ -1023,24 +1023,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 10); // Intervallo di 10 millisecondi per i centesimi di secondo
     }
 
-// Funzione per passare al turno successivo
-function switchTurn() {
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-    playerInput.value = '';
-    playerInput.placeholder = `Inserisci la parola, ${currentPlayer === 1 ? player1NameInput.value : player2NameInput.value}`;
-    // Memorizza il tempo rimanente prima di cambiare turno
-    const remainingTime = currentPlayer === 1 ? player1Timer : player2Timer;
-    clearInterval(wordInterval);
-    clearInterval(timerInterval); // Cancella l'intervallo del timer prima di passare al nuovo turno
-    if (currentPlayer === 1) {
-        player1Timer = remainingTime; // Ripristina il tempo rimanente per il giocatore 1
-    } else {
-        player2Timer = remainingTime; // Ripristina il tempo rimanente per il giocatore 2
+  // Funzione per passare al turno successivo
+    function switchTurn() {
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+        playerInput.value = '';
+        playerInput.placeholder = `Inserisci la parola, ${currentPlayer === 1 ? player1NameInput.value : player2NameInput.value}`;
+        clearInterval(wordInterval);
+        clearInterval(timerInterval); // Cancella l'intervallo del timer prima di passare al nuovo turno
+        gamePaused = true; // Mette il gioco in pausa
+        pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
     }
-    gamePaused = true; // Mette il gioco in pausa
-    pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
-}
-
 
 // Funzione per mettere in pausa o riprendere il gioco
 function togglePause() {
