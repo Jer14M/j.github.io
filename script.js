@@ -1052,7 +1052,7 @@ function togglePause() {
         annyang.abort();
     } else {
         pauseButton.textContent = 'Pausa';
-        startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
+        startTimer(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
 }
 
