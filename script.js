@@ -1064,7 +1064,7 @@ function togglePause() {
                 player2TimerDisplay.textContent = formatTime(player2Timer);
             }
         }
-        startTimer(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
+        startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
 }
 
