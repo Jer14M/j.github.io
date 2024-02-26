@@ -1034,6 +1034,9 @@ document.addEventListener("DOMContentLoaded", function() {
         pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
     }
 
+// Variabile per salvare lo stato del timer corrente quando il gioco viene messo in pausa
+let pausedTimerState = null;
+
 // Funzione per mettere in pausa o riprendere il gioco
 function togglePause() {
     gamePaused = !gamePaused;
@@ -1042,11 +1045,29 @@ function togglePause() {
         clearInterval(timerInterval);
         clearInterval(wordInterval);
         annyang.abort();
+
+        // Salva lo stato del timer corrente
+        if (currentPlayer === 1) {
+            pausedTimerState = player1Timer;
+        } else {
+            pausedTimerState = player2Timer;
+        }
     } else {
         pauseButton.textContent = 'Pausa';
+        if (pausedTimerState !== null) {
+            // Ripristina lo stato del timer corrente
+            if (currentPlayer === 1) {
+                player1Timer = pausedTimerState;
+                player1TimerDisplay.textContent = formatTime(player1Timer);
+            } else {
+                player2Timer = pausedTimerState;
+                player2TimerDisplay.textContent = formatTime(player2Timer);
+            }
+        }
         startTimer(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
 }
+
 
 
     // Funzione per avviare il gioco
