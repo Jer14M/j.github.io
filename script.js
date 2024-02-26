@@ -1024,29 +1024,34 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Funzione per passare al turno successivo
-    function switchTurn() {
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        playerInput.value = '';
-        playerInput.placeholder = `Inserisci la parola, ${currentPlayer === 1 ? player1NameInput.value : player2NameInput.value}`;
-        clearInterval(wordInterval);
-        clearInterval(timerInterval); // Cancella l'intervallo del timer prima di passare al nuovo turno
-        gamePaused = true; // Mette il gioco in pausa
-        pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
-    }
+function switchTurn() {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    playerInput.value = '';
+    playerInput.placeholder = `Inserisci la parola, ${currentPlayer === 1 ? player1NameInput.value : player2NameInput.value}`;
+    // Memorizza il tempo rimanente prima di cambiare turno
+    const remainingTime = currentPlayer === 1 ? player1Timer : player2Timer;
+    clearInterval(wordInterval);
+    clearInterval(timerInterval); // Cancella l'intervallo del timer prima di passare al nuovo turno
+    player1Timer = remainingTime; // Ripristina il tempo rimanente per il giocatore 1
+    player2Timer = remainingTime; // Ripristina il tempo rimanente per il giocatore 2
+    gamePaused = true; // Mette il gioco in pausa
+    pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
+}
 
-    // Funzione per mettere in pausa o riprendere il gioco
-    function togglePause() {
-        gamePaused = !gamePaused;
-        if (gamePaused) {
-            pauseButton.textContent = 'Riprendi';
-            clearInterval(timerInterval);
-            clearInterval(wordInterval);
-            annyang.abort();
-        } else {
-            pauseButton.textContent = 'Pausa';
-            startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
-        }
+// Funzione per mettere in pausa o riprendere il gioco
+function togglePause() {
+    gamePaused = !gamePaused;
+    if (gamePaused) {
+        pauseButton.textContent = 'Riprendi';
+        clearInterval(timerInterval);
+        clearInterval(wordInterval);
+        annyang.abort();
+    } else {
+        pauseButton.textContent = 'Pausa';
+        startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
+}
+
 
     // Funzione per avviare il gioco
     function startGame() {
