@@ -916,224 +916,191 @@ const wordsAndDefinitions = [
 { word: "ZUZZURELLONE", definition: "Persona pigra o indolente, che evita di lavorare o di impegnarsi." }
 ];
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Dichiarazione delle variabili e selezione degli elementi del DOM
-    let currentWord;
-    let revealedLetters = 1;
-    let player1Timer = 6000; // 60 secondi * 100 (per i centesimi di secondo)
-    let player2Timer = 6000; // 60 secondi * 100 (per i centesimi di secondo)
-    let currentPlayer = 1;
-    let gamePaused = false;
-    let player1Score = 0;
-    let player2Score = 0;
+let currentWord;
+let revealedLetters = 1;
+let player1Timer = 6000; // 60 secondi * 100 (per i centesimi di secondo)
+let player2Timer = 6000; // 60 secondi * 100 (per i centesimi di secondo)
+let currentPlayer = 1;
+let gamePaused = false;
+let player1Score = 0;
+let player2Score = 0;
 
-    const wordDisplay = document.getElementById('word');
-    const player1TimerDisplay = document.getElementById('player1-timer');
-    const player2TimerDisplay = document.getElementById('player2-timer');
-    const playerInput = document.getElementById('player-input');
-    const guessButton = document.getElementById('guess-button');
-    const startButton = document.getElementById('start-button');
-    const restartButton = document.getElementById('restart-button');
-    const pauseButton = document.getElementById('pause-button');
-    const definitionDisplay = document.getElementById('definition');
-    const player1ScoreDisplay = document.getElementById('player1-score');
-    const player2ScoreDisplay = document.getElementById('player2-score');
-    const player1NameInput = document.getElementById('player1-name');
-    const player2NameInput = document.getElementById('player2-name');
-    const player1Title = document.getElementById('player1-title');
-    const player2Title = document.getElementById('player2-title');
+const wordDisplay = document.getElementById('word');
+const player1TimerDisplay = document.getElementById('player1-timer');
+const player2TimerDisplay = document.getElementById('player2-timer');
+const playerInput = document.getElementById('player-input');
+const guessButton = document.getElementById('guess-button');
+const startButton = document.getElementById('start-button');
+const restartButton = document.getElementById('restart-button');
+const pauseButton = document.getElementById('pause-button');
+const definitionDisplay = document.getElementById('definition');
+const player1ScoreDisplay = document.getElementById('player1-score');
+const player2ScoreDisplay = document.getElementById('player2-score');
+const player1NameInput = document.getElementById('player1-name');
+const player2NameInput = document.getElementById('player2-name');
+const player1Title = document.getElementById('player1-title');
+const player2Title = document.getElementById('player2-title');
     const player1TimerDurationInput = document.getElementById('player1-timer-duration');
     const player2TimerDurationInput = document.getElementById('player2-timer-duration');
-    const toggleRecognitionButton = document.getElementById('toggle-recognition-button');
+  const toggleRecognitionButton = document.getElementById('toggle-recognition-button');
 
 
+let wordInterval;
+let timerInterval;
+let recognitionActive = true; // Indica se il riconoscimento vocale è attivo o meno
 
-    let wordInterval;
-    let timerInterval;
-    let recognitionActive = true; // Indica se il riconoscimento vocale è attivo o meno
+function formatTime(milliseconds) {
+    const minutes = Math.floor(milliseconds / 6000);
+    const seconds = Math.floor((milliseconds % 6000) / 100);
+    const deciseconds = Math.floor((milliseconds % 100) / 10);
+    const centiseconds = milliseconds % 10;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${deciseconds}${centiseconds}`;
+}
 
+function selectRandomWord() {
+    const randomIndex = Math.floor(Math.random() * wordsAndDefinitions.length);
+    return wordsAndDefinitions[randomIndex];
+}
 
-    // Funzione per formattare il tempo
-    function formatTime(milliseconds) {
-        const minutes = Math.floor(milliseconds / 6000);
-        const seconds = Math.floor((milliseconds % 6000) / 100);
-        const deciseconds = Math.floor((milliseconds % 100) / 10);
-        const centiseconds = milliseconds % 10;
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${deciseconds}${centiseconds}`;
+function displayWord() {
+    const displayedWord = currentWord.substring(0, revealedLetters) + "-".repeat(currentWord.length - revealedLetters);
+    wordDisplay.textContent = displayedWord;
+}
+
+function addLetter() {
+    if (!gamePaused && revealedLetters < currentWord.length - 1) {
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * currentWord.length);
+        } while (wordDisplay.textContent[randomIndex] !== '-' || currentWord.charAt(randomIndex) === '-');
+        
+        const letterToAdd = currentWord.charAt(randomIndex);
+        const wordArray = wordDisplay.textContent.split('');
+        wordArray[randomIndex] = letterToAdd;
+        wordDisplay.textContent = wordArray.join('');
+        revealedLetters++;
     }
+}
 
-    // Funzione per selezionare una parola a caso
-    function selectRandomWord() {
-        const randomIndex = Math.floor(Math.random() * wordsAndDefinitions.length);
-        return wordsAndDefinitions[randomIndex];
-    }
-
-    // Funzione per visualizzare la parola con le lettere rivelate
-    function displayWord() {
-        const displayedWord = currentWord.substring(0, revealedLetters) + "-".repeat(currentWord.length - revealedLetters);
-        wordDisplay.textContent = displayedWord;
-    }
-
-    // Funzione per aggiungere una lettera alla parola visualizzata
-    function addLetter() {
-        if (!gamePaused && revealedLetters < currentWord.length - 1) {
-            let randomIndex;
-            do {
-                randomIndex = Math.floor(Math.random() * currentWord.length);
-            } while (wordDisplay.textContent[randomIndex] !== '-' || currentWord.charAt(randomIndex) === '-');
-
-            const letterToAdd = currentWord.charAt(randomIndex);
-            const wordArray = wordDisplay.textContent.split('');
-            wordArray[randomIndex] = letterToAdd;
-            wordDisplay.textContent = wordArray.join('');
-            revealedLetters++;
-        }
-    }
-
-    // Funzione per avviare il timer del giocatore corrente
+// Funzione per avviare il timer del giocatore corrente
     function startTimer() {
-        clearInterval(timerInterval); // Cancella l'intervallo precedente, se presente
-        const currentTimerDuration = currentPlayer === 1 ? parseInt(player1TimerDurationInput.value) * 100 : parseInt(player2TimerDurationInput.value) * 100;
-        if (currentPlayer === 1) {
-            player1Timer = currentTimerDuration;
-        } else {
-            player2Timer = currentTimerDuration;
-        }
+    clearInterval(timerInterval); // Cancella l'intervallo precedente, se presente
+    const currentTimerDuration = currentPlayer === 1 ? player1Timer : player2Timer;
 
-        timerInterval = setInterval(() => {
-            if (!gamePaused) {
-                if (currentPlayer === 1) {
-                    player1Timer--;
-                    player1TimerDisplay.textContent = formatTime(player1Timer);
-                    if (player1Timer === 0) {
-                        clearInterval(timerInterval);
-                        alert('Tempo scaduto! Il giocatore 1 ha perso.');
-                        switchTurn();
-                    }
-                } else {
-                    player2Timer--;
-                    player2TimerDisplay.textContent = formatTime(player2Timer);
-                    if (player2Timer === 0) {
-                        clearInterval(timerInterval);
-                        alert('Tempo scaduto! Il giocatore 2 ha perso.');
-                        switchTurn();
-                    }
+    timerInterval = setInterval(() => {
+        if (!gamePaused) {
+            if (currentPlayer === 1) {
+                player1Timer--;
+                player1TimerDisplay.textContent = formatTime(player1Timer);
+                if (player1Timer === 0) {
+                    clearInterval(timerInterval);
+                    alert('Tempo scaduto! Il giocatore 1 ha perso.');
+                    switchTurn();
+                }
+            } else {
+                player2Timer--;
+                player2TimerDisplay.textContent = formatTime(player2Timer);
+                if (player2Timer === 0) {
+                    clearInterval(timerInterval);
+                    alert('Tempo scaduto! Il giocatore 2 ha perso.');
+                    switchTurn();
                 }
             }
-        }, 10); // Intervallo di 10 millisecondi per i centesimi di secondo
-    }
-
-  // Funzione per passare al turno successivo
-    function switchTurn() {
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        playerInput.value = '';
-        playerInput.placeholder = `Inserisci la parola, ${currentPlayer === 1 ? player1NameInput.value : player2NameInput.value}`;
-        clearInterval(wordInterval);
-        clearInterval(timerInterval); // Cancella l'intervallo del timer prima di passare al nuovo turno
-        gamePaused = true; // Mette il gioco in pausa
-        pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
-    }
-
-// Variabile per salvare lo stato del timer corrente quando il gioco viene messo in pausa
-let pausedTimerState = null;
-
-// Funzione per mettere in pausa o riprendere il gioco
-function togglePause() {
-    gamePaused = !gamePaused;
-    if (gamePaused) {
-        pauseButton.textContent = 'Riprendi';
-        clearInterval(timerInterval);
-        clearInterval(wordInterval);
-        annyang.abort();
-
-        // Salva lo stato del timer corrente
-        if (currentPlayer === 1) {
-            pausedTimerState = player1Timer;
-        } else {
-            pausedTimerState = player2Timer;
         }
-    } else {
-        pauseButton.textContent = 'Pausa';
-        if (pausedTimerState !== null) {
-            // Ripristina lo stato del timer corrente
+    }, 10); // Intervallo di 10 millisecondi per i centesimi di secondo
+
+    // Aggiungi questa parte per ripristinare il timer quando viene premuto "Riprendi"
+    if (!gamePaused) {
+        setTimeout(() => {
             if (currentPlayer === 1) {
-                player1Timer = pausedTimerState;
+                player1Timer = currentTimerDuration;
                 player1TimerDisplay.textContent = formatTime(player1Timer);
             } else {
-                player2Timer = pausedTimerState;
+                player2Timer = currentTimerDuration;
                 player2TimerDisplay.textContent = formatTime(player2Timer);
             }
-        }
-        startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
+        }, 10);
     }
 }
 
 
 
-    // Funzione per avviare il gioco
-    function startGame() {
-        const randomIndex = Math.floor(Math.random() * wordsAndDefinitions.length);
-        const selectedWord = wordsAndDefinitions[randomIndex];
+function switchTurn() {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    playerInput.value = '';
+    playerInput.placeholder = `Inserisci la parola, ${currentPlayer === 1 ? player1NameInput.value : player2NameInput.value}`;
+    clearInterval(wordInterval);
+    clearInterval(timerInterval); // Cancella l'intervallo del timer prima di passare al nuovo turno
+    gamePaused = true; // Mette il gioco in pausa
+    pauseButton.textContent = 'Riprendi'; // Modifica il testo del pulsante in "Riprendi"
+}
 
-        definitionDisplay.textContent = selectedWord.definition;
-        definitionDisplay.classList.remove('hidden');
-        currentWord = selectedWord.word;
-        revealedLetters = 1;
-        displayWord();
-        clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
-        wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
-        startTimer(); // Avvia il timer
-    }
-
-
-    // Funzione per controllare la risposta dell'utente
-    function checkAnswer() {
-        const playerGuess = playerInput.value.trim().toUpperCase();
-        if (playerGuess === currentWord) {
-            if (currentPlayer === 1) {
-                player1Score++;
-                player1ScoreDisplay.textContent = player1Score;
-            } else {
-                player2Score++;
-                player2ScoreDisplay.textContent = player2Score;
-            }
-            wordDisplay.textContent = currentWord;
-            switchTurn();
-        } else {
-            alert('Risposta sbagliata! Prova di nuovo.');
-        }
-    }
-    
-    // Funzione per resettare il gioco
-    function resetGame() {
-        player1Timer = parseInt(player1TimerDurationInput.value) * 100;
-        player2Timer = parseInt(player2TimerDurationInput.value) * 100;
-        player1TimerDisplay.textContent = formatTime(player1Timer);
-        player2TimerDisplay.textContent = formatTime(player2Timer);
-        player1Score = 0;
-        player2Score = 0;
-        player1ScoreDisplay.textContent = player1Score;
-        player2ScoreDisplay.textContent = player2Score;
-        clearInterval(timerInterval);
-        clearInterval(wordInterval);
+function togglePause() {
+    gamePaused = !gamePaused;
+    if (gamePaused) {
+        pauseButton.textContent = 'Riprendi';
+      clearInterval(wordInterval);
+       annyang.abort();
+    } else {
         pauseButton.textContent = 'Pausa';
-        startButton.classList.remove('hidden');
-        restartButton.classList.add('hidden');
-        pauseButton.classList.add('hidden');
-        playerInput.value = '';
-        definitionDisplay.textContent = '';
-        definitionDisplay.classList.add('hidden');
-        player1Title.textContent = player1NameInput.value || 'Giocatore 1';
-        player2Title.textContent = player2NameInput.value || 'Giocatore 2';
+        startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
+}
 
-    // Aggiungi gestore di eventi per l'evento "keydown" sull'input dell'utente
-    playerInput.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            checkAnswer(); // Invia la parola se l'utente preme "Invio"
+function startGame() {
+    const randomIndex = Math.floor(Math.random() * wordsAndDefinitions.length);
+    const selectedWord = wordsAndDefinitions[randomIndex];
+    
+    definitionDisplay.textContent = selectedWord.definition;
+    definitionDisplay.classList.remove('hidden');
+    currentWord = selectedWord.word;
+    revealedLetters = 1;
+    displayWord();
+    clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
+    wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
+    startTimer(); // Avvia il timer
+}
+
+
+function checkAnswer() {
+    const playerGuess = playerInput.value.trim().toUpperCase();
+    if (playerGuess === currentWord) {
+        if (currentPlayer === 1) {
+            player1Score++;
+            player1ScoreDisplay.textContent = player1Score;
+        } else {
+            player2Score++;
+            player2ScoreDisplay.textContent = player2Score;
         }
-    });
+         wordDisplay.textContent = currentWord;
+        switchTurn();
+    } else {
+        alert('Risposta sbagliata! Prova di nuovo.'); 
+     } 
+}
 
+function resetGame() {
+    player1Timer = parseInt(player1TimerDurationInput.value) * 100;
+        player2Timer = parseInt(player2TimerDurationInput.value) * 100;
+
+    player1TimerDisplay.textContent = formatTime(player1Timer);
+    player2TimerDisplay.textContent = formatTime(player2Timer);
+    player1Score = 0;
+    player2Score = 0;
+    player1ScoreDisplay.textContent = player1Score;
+    player2ScoreDisplay.textContent = player2Score;
+    clearInterval(timerInterval);
+    clearInterval(wordInterval);
+    pauseButton.textContent = 'Pausa';
+    startButton.classList.remove('hidden');
+    restartButton.classList.add('hidden');
+    pauseButton.classList.add('hidden');
+    playerInput.value = '';
+    definitionDisplay.textContent = '';
+    definitionDisplay.classList.add('hidden');
+    player1Title.textContent = player1NameInput.value || 'Giocatore 1';
+    player2Title.textContent = player2NameInput.value || 'Giocatore 2';
+}
 
 toggleRecognitionButton.addEventListener('click', () => {
     if (recognitionActive) {
@@ -1160,24 +1127,27 @@ toggleRecognitionButton.addEventListener('click', () => {
 });
 
 
-
-    
-    // Aggiungi gestori di eventi per i pulsanti
-    guessButton.addEventListener('click', checkAnswer);
-
-    startButton.addEventListener('click', () => {
-        startButton.classList.add('hidden');
-        restartButton.classList.remove('hidden');
-        pauseButton.classList.remove('hidden');
-        player1Title.textContent = player1NameInput.value || 'Giocatore 1'; 
-        player2Title.textContent = player2NameInput.value || 'Giocatore 2'; 
-        startGame();
-    });
-
-    restartButton.addEventListener('click', () => {
-        resetGame(); 
-        startButton.classList.remove('hidden');
-    });
-
-    pauseButton.addEventListener('click', togglePause);
+// Aggiungi questa funzione per gestire l'evento "keydown" sull'input dell'utente
+playerInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        checkAnswer(); // Invia la parola se l'utente preme "Invio"
+    }
 });
+
+guessButton.addEventListener('click', checkAnswer);
+
+startButton.addEventListener('click', () => {
+    startButton.classList.add('hidden');
+    restartButton.classList.remove('hidden');
+    pauseButton.classList.remove('hidden');
+    player1Title.textContent = player1NameInput.value || 'Giocatore 1'; 
+    player2Title.textContent = player2NameInput.value || 'Giocatore 2'; 
+    startGame();
+});
+
+restartButton.addEventListener('click', () => {
+    resetGame(); 
+    startButton.classList.remove('hidden');
+});
+
+pauseButton.addEventListener('click', togglePause); 
