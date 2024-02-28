@@ -924,6 +924,7 @@ let currentPlayer = 1;
 let gamePaused = false;
 let player1Score = 0;
 let player2Score = 0;
+let pauseStartTime = 0; // Variabile per tenere traccia del tempo di inizio della pausa
 
 const wordDisplay = document.getElementById('word');
 const player1TimerDisplay = document.getElementById('player1-timer');
@@ -1040,7 +1041,8 @@ function togglePause() {
     if (gamePaused) {
         pauseStartTime = Date.now(); // Salva il tempo di inizio della pausa
         pauseButton.textContent = 'Riprendi';
-      clearInterval(wordInterval);
+        clearInterval(wordInterval);
+        clearInterval(timerInterval);
        annyang.abort();
     } else {
         pauseButton.textContent = 'Pausa';
