@@ -924,7 +924,6 @@ let currentPlayer = 1;
 let gamePaused = false;
 let player1Score = 0;
 let player2Score = 0;
-let pauseStartTime = 0; // Variabile per tenere traccia del tempo di inizio della pausa
 
 const wordDisplay = document.getElementById('word');
 const player1TimerDisplay = document.getElementById('player1-timer');
@@ -941,9 +940,9 @@ const player1NameInput = document.getElementById('player1-name');
 const player2NameInput = document.getElementById('player2-name');
 const player1Title = document.getElementById('player1-title');
 const player2Title = document.getElementById('player2-title');
-    const player1TimerDurationInput = document.getElementById('player1-timer-duration');
-    const player2TimerDurationInput = document.getElementById('player2-timer-duration');
-  const toggleRecognitionButton = document.getElementById('toggle-recognition-button');
+const player1TimerDurationInput = document.getElementById('player1-timer-duration');
+const player2TimerDurationInput = document.getElementById('player2-timer-duration');
+const toggleRecognitionButton = document.getElementById('toggle-recognition-button');
 
 
 let wordInterval;
@@ -1039,16 +1038,11 @@ function switchTurn() {
 function togglePause() {
     gamePaused = !gamePaused;
     if (gamePaused) {
-        pauseStartTime = Date.now(); // Salva il tempo di inizio della pausa
         pauseButton.textContent = 'Riprendi';
         clearInterval(wordInterval);
-        clearInterval(timerInterval);
-       annyang.abort();
+        annyang.abort();
     } else {
         pauseButton.textContent = 'Pausa';
-        const pauseDuration = Date.now() - pauseStartTime; // Calcola la durata della pausa
-        player1Timer += currentPlayer === 1 ? pauseDuration : 0; // Aggiorna il timer del giocatore 1
-        player2Timer += currentPlayer === 2 ? pauseDuration : 0; // Aggiorna il timer del giocatore 2
         startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
 }
@@ -1062,8 +1056,6 @@ function startGame() {
     currentWord = selectedWord.word;
     revealedLetters = 1;
     displayWord();
-    player1Timer = parseInt(player1TimerDurationInput.value) * 100;
-    player2Timer = parseInt(player2TimerDurationInput.value) * 100;
     clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
     wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
     startTimer(); // Avvia il timer
@@ -1089,8 +1081,7 @@ function checkAnswer() {
 
 function resetGame() {
     player1Timer = parseInt(player1TimerDurationInput.value) * 100;
-        player2Timer = parseInt(player2TimerDurationInput.value) * 100;
-
+    player2Timer = parseInt(player2TimerDurationInput.value) * 100;
     player1TimerDisplay.textContent = formatTime(player1Timer);
     player2TimerDisplay.textContent = formatTime(player2Timer);
     player1Score = 0;
