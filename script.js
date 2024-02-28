@@ -1043,6 +1043,9 @@ function togglePause() {
        annyang.abort();
     } else {
         pauseButton.textContent = 'Pausa';
+        const pauseDuration = Date.now() - pauseStartTime; // Calcola la durata della pausa
+        player1Timer += currentPlayer === 1 ? pauseDuration : 0; // Aggiorna il timer del giocatore 1
+        player2Timer += currentPlayer === 2 ? pauseDuration : 0; // Aggiorna il timer del giocatore 2
         startGame(); // Se il gioco viene ripreso, avvia nuovamente il timer e il display delle parole
     }
 }
