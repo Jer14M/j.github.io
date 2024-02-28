@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
 const wordsAndDefinitions = [
 { word: "ABBAGLIARE", definition: "Produrre un'abbagliante luce, accecare temporaneamente con un forte bagliore." },
 { word: "ABBAGLIO", definition: "Fenomeno ottico che si verifica quando la luce si riflette su una superficie e raggiunge gli occhi in modo distorto." },
@@ -945,8 +944,6 @@ const player1TimerDurationInput = document.getElementById('player1-timer-duratio
 const player2TimerDurationInput = document.getElementById('player2-timer-duration');
 const toggleRecognitionButton = document.getElementById('toggle-recognition-button');
 
-let player1Timer = document.getElementById('player1-timer-duration').value * 100;
-let player2Timer = document.getElementById('player2-timer-duration').value * 100;
 let wordInterval;
 let timerInterval;
 let recognitionActive = true; // Indica se il riconoscimento vocale è attivo o meno
@@ -1151,5 +1148,4 @@ restartButton.addEventListener('click', () => {
     startButton.classList.remove('hidden');
 });
 
-pauseButton.addEventListener('click', togglePause); 
-});                         
+pauseButton.addEventListener('click', togglePause);                         
