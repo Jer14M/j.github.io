@@ -1056,6 +1056,8 @@ function startGame() {
     currentWord = selectedWord.word;
     revealedLetters = 1;
     displayWord();
+    player1Timer = parseInt(player1TimerDurationInput.value) * 100;
+    player2Timer = parseInt(player2TimerDurationInput.value) * 100;
     clearInterval(wordInterval); // Cancella l'intervallo precedente, se presente
     wordInterval = setInterval(addLetter, 2100); // Imposta un nuovo intervallo per la visualizzazione delle lettere
     startTimer(); // Avvia il timer
