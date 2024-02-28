@@ -1038,6 +1038,7 @@ function switchTurn() {
 function togglePause() {
     gamePaused = !gamePaused;
     if (gamePaused) {
+        pauseStartTime = Date.now(); // Salva il tempo di inizio della pausa
         pauseButton.textContent = 'Riprendi';
       clearInterval(wordInterval);
        annyang.abort();
